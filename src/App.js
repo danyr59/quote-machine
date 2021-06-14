@@ -1,6 +1,3 @@
-import logo from './logo.svg'
-import quote from './left-quote-svgrepo-com.svg';
-import tumblr from './tumblr-logo-svgrepo-com.svg';
 import React, {Component} from 'react'; 
 import './App.css';
 function add(currentQuote, currentAuthor){
@@ -12,7 +9,7 @@ const Buttons = (props) =>{
   return (
     <div className="row mt-4 " >
       <div className="col-sm-4 d-flex justify-content-start">
-        <a className="btn btn-primary effect" style={{backgroundColor: props._color, border:'none'}}><i class="bi bi-youtube tam-botones"></i> </a> 
+        <a className="btn btn-primary effect" href="#" style={{backgroundColor: props._color, border:'none'}}><i class="bi bi-youtube tam-botones"></i> </a> 
         <a className="btn btn-primary ms-1 effect" id="tweet-quote" style={{backgroundColor: props._color ,  border:'none'}} href={add(props._message,props._author)}><i className="bi bi-twitter tam-botones "></i></a>
      </div>
       <div className="col-sm-8 d-flex justify-content-end">
@@ -58,7 +55,6 @@ function QuoteBox(props){
 class App extends Component{
   constructor(props){
     super(props);
-    this.control = 1;
     this.state ={
       message: '',
       author:'',
@@ -66,10 +62,22 @@ class App extends Component{
       _animation :true
     }
     this.fechtMessage = this.fechtMessage.bind(this);   
-    this.setColor = this.setColor.bind(this);
   }
   componentDidMount(){
-    if(this.control){    
+      const _color= [
+      '#16a085',
+      '#27ae60',
+      '#2c3e50',
+      '#f39c12',
+      '#e74c3c',
+      '#9b59b6',
+      '#FB6964',
+      '#342224',
+      '#472E32',
+      '#BDBB99',
+      '#77B1A9',
+      '#73A857'
+      ];
       let _message;
       let _author;
       fetch('https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json')
@@ -81,54 +89,25 @@ class App extends Component{
         this.setState({
           message: _message,
           author: _author,
-          _animation : false
+          _animation : false,
+          color: _color[Math.floor(Math.random() * _color.length)] 
         });
       })
     
-      this.setColor();
-      this.control = 0;
-    }else{
-      this.setState({
-        _animation: false
-      });
-    }
-    
    
   }
+  componentDidUpdate(){
+    setTimeout(() =>{
+      if(this.state._animation){
+        this.setState({
+          _animation : false
+        });
+
+      }
+    }, 2000); 
+  }
   fechtMessage(){
-    let _message;
-    let _author;
-    fetch('https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json')
-    .then(response => response.json())
-    .then(data =>{
-      _message = data.quotes[Math.floor(Math.random() * data.quotes.length)].quote ;
-      _author = data.quotes[Math.floor(Math.random() * data.quotes.length)].author ;
-
-      this.setState({
-        message: _message,
-        author: _author 
-      });
-    })
-    
-    this.setColor();
-    this.OnClicked();
-   // let buttom = document.getElementById("new-quote");
-    //buttom.addEventListener('click',this.animation);
-
-  }
-  OnClicked(){
-    this.setState(state=> ({
-       _animation: true 
-    }));
-
-  }
-  animation = () =>{
-    this.setState(prevState =>({
-      _animation: !prevState._animation
-    }));
-  }
-  setColor(){
-    const _color= [
+     const _color= [
       '#16a085',
       '#27ae60',
       '#2c3e50',
@@ -142,21 +121,39 @@ class App extends Component{
       '#77B1A9',
       '#73A857'
     ];
-    this.setState({
-      color: _color[Math.floor(Math.random() * _color.length)]  
-    });
-     //var list = document.getElementsByClassName("effect");
-//    for(let i = 0 ; i< list.length; i++){
-  //    list[i].classList.add("animated");
-    //}
+    let _message;
+    let _author;
+    fetch('https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json')
+    .then(response => response.json())
+    .then(data =>{
+      _message = data.quotes[Math.floor(Math.random() * data.quotes.length)].quote ;
+      _author = data.quotes[Math.floor(Math.random() * data.quotes.length)].author ;
 
-  //list.getElementsByClassName("child")[0].innerHTML = "Milk";
-   
+      this.setState({
+        message: _message,
+        author: _author, 
+        _animation : true, 
+        color: _color[Math.floor(Math.random() * _color.length)]  
+      });
+    })
+    
+    //this.OnClicked();
+   // let buttom = document.getElementById("new-quote");
+    //buttom.addEventListener('click',this.animation);
+  }
+  OnClicked(){
+    this.setState(state=> ({
+       _animation: true 
+    }));
 
-//     var element = document.getElementById("myDIV");
-//   element.classList.add("mystyle");
+  }
+  animation = () =>{
+    this.setState(prevState =>({
+      _animation: !prevState._animation
+    }));
   }
   render(){
+    console.log(this.state._animation)
     return (
     <div className={["container-fluid fullHeight d-flex align-items-center justify-content-center  effect", this.state._animation && 'animated'].join(" ")} style={{backgroundColor: this.state.color}} >
       <QuoteBox _message={this.state.message} _author={this.state.author} funcion={this.fechtMessage} _color={this.state.color} />
