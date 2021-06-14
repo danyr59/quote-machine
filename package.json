@@ -25,7 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -r https://$GH_TOKEN@github.com/danyr59/quote-machine"
+    "deploy": "gh-pages -d build -r https://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@github.com/danyr59/quote-machine"
   },
   "eslintConfig": {
     "extends": [
